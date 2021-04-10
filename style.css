@@ -1,3 +1,37 @@
 #root {
-  color: red;
+  color: black;
+  background: rgb(236, 234, 234);
+  
+}
+
+.col-4{
+  margin-bottom: 20px;
+}
+
+.episode{
+
+  background-color: white;
+  margin: 5px;
+  padding: 5px;
+  text-align: center;
+  height: 100%;
+
+  
+}
+
+.episode img {
+  max-width: 100%;
+
+}
+
+.episode h3{
+  border: 2px solid rgb(219, 211, 211);
+  border-radius: 10px;
+  line-height:2.2;
+  
+}
+
+.episode p {
+  text-align:left;
+  margin: 10px 25px 5px 25px;
 }
