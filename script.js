@@ -2,7 +2,7 @@
 function setup() {
   const allEpisodes = getAllEpisodes();
   
-  makePageForEpisodes(allEpisodes);
+  // makePageForEpisodes(allEpisodes);
 }
 
 function makePageForEpisodes(episodeList) {
@@ -10,7 +10,7 @@ function makePageForEpisodes(episodeList) {
          //STRUCTURE
   //rootElem        --container
   //rowDiv          --row
-  //divColumn       --col-4
+  //columnDiv       --col-md-4
   //eachEpisode     --div(title,img,p)
   
   const rootElem = document.getElementById("root");
@@ -22,7 +22,7 @@ function makePageForEpisodes(episodeList) {
   for (const episode of episodeList) {
 
     const columnDiv = document.createElement('div');
-    columnDiv.classList.add('col-4');
+    columnDiv.classList.add('col-md-4');
    
     const eachEpisode = document.createElement('div');
     eachEpisode.classList.add('episode');
@@ -50,8 +50,48 @@ function makePageForEpisodes(episodeList) {
     
  }
 
+}//makePageForEpisodes closing
 
+window.onload = setup;
+
+//LEVEL 200
+// Add a "live" search input:
+// Only episodes whose summary OR name contains the search term should be displayed
+// The search should be case-insensitive
+// The display should update immediately after each keystroke changes the input.
+// Display how many episodes match the current search
+// If the search box is cleared, all episodes should be shown.
+// If you have been fetching the episode data from the API, be careful not to cause many
+// frequent requests with this search feature. The search should look through an in-memory
+// copy of the episode list. Do not fetch the data again each time something is typed!
+
+
+//SEARCH-LEVEL 200
+
+const searchInput = document.querySelector('.searchInput');
+searchInput.addEventListener('input', search);
+
+
+function search(){
+
+  const searchInput = document.querySelector('.searchInput');
+  const searchInputValue = searchInput.value;
+
+  const allEpisodes = getAllEpisodes();
+  const filteredEpisodes = allEpisodes.filter(episode => {
+    
+      const nameUpperCase = episode.name.toUpperCase();
+      const summaryUpperCase = episode.summary.toUpperCase();
+      if(nameUpperCase.includes(searchInputValue)|| summaryUpperCase.includes(searchInputValue) ){
+    return episode;
+
+}
+  }
+ )
+
+console.log(filteredEpisodes);
+makePageForEpisodes(filteredEpisodes)
 }
 
 
-window.onload = setup;
+
