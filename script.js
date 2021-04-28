@@ -1,26 +1,39 @@
 //You can edit ALL of the code here
 function setup() {
   const allEpisodes = getAllEpisodes();
-  
-  // makePageForEpisodes(allEpisodes);
+  createSelect()
+  makePageForEpisodes(allEpisodes);
+
 }
+
+//LEVEL 100- Get Episodes from getAllEpisodes Function
 
 function makePageForEpisodes(episodeList) {
          
-         //STRUCTURE
-  //rootElem        --container
-  //rowDiv          --row
-  //columnDiv       --col-md-4
-  //eachEpisode     --div(title,img,p)
-  
   const rootElem = document.getElementById("root");
   rootElem.classList.add('container');
 
   const rowDiv = document.createElement('div');
-  rowDiv.classList.add('row');
-  
+  rowDiv.classList.add('row-main');
+  const rowMain = document.getElementsByClassName('row-main');
+  if(rowMain.length > 0){
+    rowMain[0].remove();
+
+  }
+
   for (const episode of episodeList) {
 
+  const columnDiv = getTvSeries(episode);
+
+  rowDiv.appendChild(columnDiv);
+ }
+
+rootElem.appendChild(rowDiv);
+
+}//makePageForEpisodes closing
+
+function getTvSeries(episode){
+      //start loop
     const columnDiv = document.createElement('div');
     columnDiv.classList.add('col-md-4');
    
@@ -45,53 +58,113 @@ function makePageForEpisodes(episodeList) {
 //Appends
   eachEpisode.append(title, imgElem, summaryText);
   columnDiv.appendChild(eachEpisode);
-  rowDiv.appendChild(columnDiv);
-  rootElem.appendChild(rowDiv);
-    
- }
+  //end Loop
+  return columnDiv;
+}
 
-}//makePageForEpisodes closing
 
 window.onload = setup;
 
-//LEVEL 200
-// Add a "live" search input:
-// Only episodes whose summary OR name contains the search term should be displayed
-// The search should be case-insensitive
-// The display should update immediately after each keystroke changes the input.
-// Display how many episodes match the current search
-// If the search box is cleared, all episodes should be shown.
-// If you have been fetching the episode data from the API, be careful not to cause many
-// frequent requests with this search feature. The search should look through an in-memory
-// copy of the episode list. Do not fetch the data again each time something is typed!
-
-
-//SEARCH-LEVEL 200
+//Level 200-Search and Display Episodes
 
 const searchInput = document.querySelector('.searchInput');
-searchInput.addEventListener('input', search);
+searchInput.addEventListener('input', makeSearchEpisodes);
 
-
-function search(){
-
-  const searchInput = document.querySelector('.searchInput');
-  const searchInputValue = searchInput.value;
-
+function makeSearchEpisodes(){
+ 
   const allEpisodes = getAllEpisodes();
+  const searchInput = document.querySelector('.searchInput');
+  const searchValue = searchInput.value.toUpperCase();
+
   const filteredEpisodes = allEpisodes.filter(episode => {
+    const upperName = episode.name.toUpperCase();
+    const upperSummary = episode.summary.toUpperCase();
     
-      const nameUpperCase = episode.name.toUpperCase();
-      const summaryUpperCase = episode.summary.toUpperCase();
-      if(nameUpperCase.includes(searchInputValue)|| summaryUpperCase.includes(searchInputValue) ){
-    return episode;
+    if(upperName.includes(searchValue)||upperSummary.includes(searchValue)){
+    return episode
 
-}
+    }
+
+  })//filter close 
+  console.log(filteredEpisodes);
+  const displayResults = document.querySelector('.displayResults');
+
+  if(searchValue !== null){
+    displayResults.innerText = `Displaying ${filteredEpisodes.length}/${allEpisodes.length} episodes`
   }
- )
 
-console.log(filteredEpisodes);
-makePageForEpisodes(filteredEpisodes)
+  else{
+    displayResults.innerText = `Displaying ${allEpisodes.length}/${allEpisodes.length} episodes`
+
+  }
+ 
+  makePageForEpisodes(filteredEpisodes)
+
+
+}//function close
+
+
+
+//Level 300-Select Episode
+
+
+// const optionBtn = document.querySelector('.optionButton')
+
+function createSelect(){
+  //create content of select
+  const selectBtn = document.querySelector('.selectButton');
+  const allEpisodes = getAllEpisodes();
+
+  //Option Main
+  const optionEpisode = document.createElement('option');
+  optionEpisode.value = '-1';
+  optionEpisode.innerHTML = "Select an Episode"
+  selectBtn.appendChild(optionEpisode);
+  //Other Options
+for (let i = 0; i < allEpisodes.length; i++) {
+  const episode = allEpisodes[i];
+  const option = document.createElement('option')
+    option.value = `${i}`;  // show.id
+
+    if( episode.number > 9){ 
+      option.innerText = `${episode.name} - S0${episode.season}E${episode.number}`;
+    }
+    else { 
+      option.innerText = `${episode.name} - S0${episode.season}E0${episode.number}`;
+    }
+
+    selectBtn.appendChild(option);
+  }
+
+  selectBtn.addEventListener('change', selectFunc);
 }
 
+function selectFunc(e){
+  const index = parseInt(e.target.value);
+//  console.log(index);
+  const allEpisodes = getAllEpisodes();
 
+  if(index === -1){
+    console.log(allEpisodes[index]);
+    makePageForEpisodes(allEpisodes)
+  }else{
+    console.log(allEpisodes[index]);
+    makePageForEpisodes([allEpisodes[index]])
+  }
+
+
+
+
+  //event value
+}
+
+  
+
+//LEVEL 300
+// Complete all requirements from level 200
+// Add a select input which allows you to jump quickly to an episode:
+// The select input should list all episodes in the format: "S01E01 - Winter is Coming"
+// When the user makes a selection, they should be taken directly to that episode in the list
+// Bonus: if you prefer, when the select is used, ONLY show the selected episode. If you do this,
+//  be sure to provide a way for the user to see all episodes again.
 
