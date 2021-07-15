@@ -1,49 +1,53 @@
+body{
+  background-color: rgb(235, 198, 206);
+ 
+}
 
-#root {
-  color: black;
-  background: rgb(236, 234, 234);
-  
+.navigation{
+  display: flex;
+  margin:5px 0px 10px 120px; 
+  width: 500px;
 }
 
 .form-control{
   width: auto;
 }
 
+#root {
+  color: black;
+  background:white
+  
+}
+
 .col-md-4{
-  margin-bottom: 20px;
-}
-
-.episode{
-
-  background-color: white;
-  margin: 10px 10px 10px 10px;
-  padding: 5px;
   text-align: center;
-  height: 100%;
+  border: 25px solid rgb(158, 178, 189);
+  border-radius: 5x;
+ 
+}
+
+
+.col-md-4 h4{
+  
+    text-align: center;
+    padding: 20px;
+    margin: 10px;
+    font-size: 1.5rem;
+    color: rgb(207, 118, 16);
+    border: 2px solid rgb(37, 202, 31);
+    border-radius: 7px;
 
 }
 
-.episode img {
-  max-width: 100%;
-
-}
-
-.episode h3{
-  border: 2px solid rgb(219, 211, 211);
-  border-radius: 10px;
-  line-height:2.2;
-  margin:20px 0px 10px 0px;
-}
-
-.episode p {
+.col-md-4 p {
   text-align:left;
-  margin: 10px 25px 5px 25px;
+  margin: 10px 10px 50px 25px;
 }
 
 /* MEDIA SCREEN SIZES */
 
 /* TABLET VERSION */
-@media (max-width: 600px) {
+/* @media (max-width: 600px) {
 
-}
+} */
 
