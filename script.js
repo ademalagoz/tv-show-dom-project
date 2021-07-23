@@ -1,26 +1,25 @@
-//You can edit ALL of the code here
-// const allEpisodes = getAllEpisodes();
 
-//Level 350 get data from the Api instead of getAllEpisodes
-let url = "https://api.tvmaze.com/shows/82/episodes";
-function getFetchData(url) {
-  fetch(url)
-    .then((response) => response.json())
-    .then((data) => {
-      console.log(data);
-      makePageForEpisodes(data);
-      selectMenu(data);
-    })
-    .catch((err) => console.log(err));
+const allShows = getOneShow();
+
+function getFetchData() {
+  for (show of allShows) {
+    fetch(`https://api.tvmaze.com/shows/${show.id}/episodes`)
+      // console.log( fetch(url));
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        selectEpisodes(data);
+        makePageForEpisodes(data); //undefined
+        console.log(makePageForEpisodes(data));
+      })
+      .catch((err) => console.log(err));
+  }
+
+  showSelect(allShows);
 }
-// window.onload = setup;
-getFetchData(url);
 
-// function setup() {
-//   makePageForEpisodes(allEpisodes);
-//   // searchEpisodes(allEpisodes);
-//   selectMenu(allEpisodes);
-// }
+// window.onload = setup;
+getFetchData();
 
 //LEVEL 100- Get Episodes from getAllEpisodes Function
 
@@ -35,96 +34,121 @@ function makePageForEpisodes(episodeList) {
   if (rowMain.length > 0) {
     rowMain[0].remove();
   }
+  const countEpisodes = document.querySelector(".displayResults");
+  countEpisodes.innerText = `Display ${episodeList.length} of ${episodeList.length} episodes`;
 
   for (const episode of episodeList) {
     const columnDiv = oneEpisode(episode);
     rowDiv.appendChild(columnDiv);
-  }
 
-  rootElem.appendChild(rowDiv);
+    rootElem.appendChild(rowDiv);
 
-  function oneEpisode(episode) {
-    const columnDiv = document.createElement("div");
-    columnDiv.classList.add("col-md-4");
+    //creating one episode for each column-4
+    function oneEpisode(episode) {
+      const columnDiv = document.createElement("div");
+      columnDiv.classList.add("col-md-4");
 
-    const title = document.createElement("h4");
+      const title = document.createElement("h4");
 
-    if (episode.number > 9) {
-      title.innerText = `${episode.name} - S0${episode.season}E${episode.number}`;
-    } else {
-      title.innerText = `${episode.name} - S0${episode.season}E0${episode.number}`;
-    }
-
-    const imgElem = document.createElement("img");
-    imgElem.src = episode.image.medium;
-
-    const summaryText = document.createElement("p");
-    summaryText.innerHTML = episode.summary;
-
-    columnDiv.append(title, imgElem, summaryText);
-
-    return columnDiv;
-  }
-
-  //Level 200-Search Term
-
-  const countEpisodes = document.querySelector(".displayResults");
-  countEpisodes.innerText = `Display ${episodeList.length} of ${episodeList.length} episodes`;
-
-  const searchInput = document.querySelector(".searchInput");
-  searchInput.addEventListener("input", searchEpisodes);
-
-  function searchEpisodes() {
-    let value = searchInput.value.toLowerCase();
-    const allColumns = document.querySelectorAll(".col-md-4");
-    let count = 0;
-    countEpisodes.innerText = "";
-
-    allColumns.forEach((column) => {
-      const columnValue = column.textContent.toLowerCase();
-      if (columnValue.includes(value)) {
-        column.style.display = "";
-        count++;
-        countEpisodes.innerText = `Display ${count} of ${allColumns.length} episodes`;
+      if (episode.number > 9) {
+        title.innerText = `${episode.name} - S0${episode.season}E${episode.number}`;
       } else {
-        column.style.display = "none";
-        countEpisodes.innerText = `Display ${count} of ${allColumns.length} episodes`;
+        title.innerText = `${episode.name} - S0${episode.season}E0${episode.number}`;
       }
-    });
+
+      const imgElem = document.createElement("img");
+      imgElem.src = episode.image.medium;
+
+      const summaryText = document.createElement("p");
+      summaryText.innerHTML = episode.summary;
+
+      columnDiv.append(title, imgElem, summaryText);
+
+      return columnDiv;
+    }
   }
 } //makePageForEpisodes closing
 
+//Level 200-Search Term
+
+const searchInput = document.querySelector(".searchInput");
+const displayEpisodes = document.querySelector(".displayResults");
+searchInput.addEventListener("input", searchEpisodes);
+
+function searchEpisodes() {
+  let searchValue = searchInput.value.toLowerCase();
+  const allColumns = document.querySelectorAll(".col-md-4");
+
+  let count = 0;
+  displayEpisodes.innerText = "";
+
+  allColumns.forEach((column) => {
+    const columnValue = column.textContent.toLowerCase();
+
+    if (columnValue.includes(searchValue)) {
+      column.style.display = "";
+      count++;
+      displayEpisodes.innerText = `Display ${count} of ${allColumns.length} episodes`;
+    } else {
+      column.style.display = "none";
+      displayEpisodes.innerText = `Display ${count} of ${allColumns.length} episodes`;
+    }
+  });
+}
+
 //Level 300-Select/Option Menu
 
-function selectMenu(wholeEpisodes) {
-  const selectBtn = document.querySelector(".selectButton");
+function selectEpisodes(wholeEpisodes) {
+  const selectBtn = document.querySelector(".selectEpisodes");
 
-  const optionEpisode = document.createElement("option");
-  optionEpisode.value = "-1";
-  optionEpisode.innerHTML = "Select an Episode";
+  for (let i = 1; i < wholeEpisodes.length; i++) {
+    let episode = wholeEpisodes[i];
 
-  selectBtn.appendChild(optionEpisode);
+    const optionValue = document.createElement("option");
+    // optionValue.innerHTML = "Select Episode";
 
-  for (let i = 0; i < wholeEpisodes.length; i++) {
-    const episode = wholeEpisodes[i];
-    const option = document.createElement("option");
-    option.value = `${i}`;
+    optionValue.value = i;
 
     if (episode.number > 9) {
-      option.innerText = `${episode.name} - S0${episode.season}E${episode.number}`;
+      optionValue.innerText = `${episode.name} - S0${episode.season}E${episode.number}`;
     } else {
-      option.innerText = `${episode.name} - S0${episode.season}E0${episode.number}`;
+      optionValue.innerText = `${episode.name} - S0${episode.season}E0${episode.number}`;
     }
 
-    selectBtn.appendChild(option);
+    selectBtn.appendChild(optionValue);
   }
 
-  selectBtn.addEventListener("change", searchValue);
+  selectBtn.addEventListener("change", getEpisodes);
 
-  function searchValue(e) {
+  function getEpisodes(e) {
     const index = parseInt(e.target.value);
     index === -1
       ? makePageForEpisodes(wholeEpisodes)
       : makePageForEpisodes([wholeEpisodes[index]]);
+  }
+}
+
+//Level 400-Display Show Menu
+
+function showSelect(getShows) {
+  const showBtn = document.querySelector(".selectShow");
+
+  for (let i = 0; i < getShows.length; i++) {
+    const show = getShows[i];
+    const optionSelect = document.createElement("option");
+    optionSelect.value = i;
+
+    optionSelect.innerText = `${show.name}`;
+
+    showBtn.appendChild(optionSelect);
+  }
+
+  showBtn.addEventListener("change", searchShowValue);
+
+  function searchShowValue(e) {
+    const index = parseInt(e.target.value);
+    index === -1
+      ? makePageForEpisodes(getShows)
+      : makePageForEpisodes([getShows[index]]);
   }
 }
