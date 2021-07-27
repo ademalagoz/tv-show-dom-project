@@ -52,59 +52,6 @@ function getOneShow() {
         previousepisode: { href: "http://api.tvmaze.com/episodes/1623968" },
       },
     },
-
-    {
-      id: 465,
-      url: "http://www.tvmaze.com/shows/465/band-of-brothers",
-      name: "Band of Brothers",
-      type: "Scripted",
-      language: "English",
-      genres: ["Drama", "Action", "War"],
-      status: "Ended",
-      runtime: 60,
-      premiered: "2001-09-09",
-      officialSite: "http://www.hbo.com/band-of-brothers",
-      schedule: {
-        time: "20:00",
-        days: ["Sunday"],
-      },
-      rating: {
-        average: 9.5,
-      },
-      weight: 96,
-      network: {
-        id: 8,
-        name: "HBO",
-        country: {
-          name: "United States",
-          code: "US",
-          timezone: "America/New_York",
-        },
-      },
-      webChannel: null,
-      externals: {
-        tvrage: 2708,
-        thetvdb: 74205,
-        imdb: "tt0185906",
-      },
-      image: {
-        medium:
-          "http://static.tvmaze.com/uploads/images/medium_portrait/80/201679.jpg",
-        original:
-          "http://static.tvmaze.com/uploads/images/original_untouched/80/201679.jpg",
-      },
-      summary:
-        "<p>Drawn from interviews with survivors of Easy Company, as well as their journals and letters, <b>Band of Brothers</b> chronicles the experiences of these men from paratrooper training in Georgia through the end of the war. As an elite rifle company parachuting into Normandy early on D-Day morning, participants in the Battle of the Bulge, and witness to the horrors of war, the men of Easy knew extraordinary bravery and extraordinary fear - and became the stuff of legend. Based on Stephen E. Ambrose's acclaimed book of the same name.</p>",
-      updated: 1581996681,
-      _links: {
-        self: {
-          href: "http://api.tvmaze.com/shows/465",
-        },
-        previousepisode: {
-          href: "http://api.tvmaze.com/episodes/42799",
-        },
-      },
-    },
   ];
 }
 

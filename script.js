@@ -1,25 +1,20 @@
+const allShows = getAllShows();
 
-const allShows = getOneShow();
-
-function getFetchData() {
-  for (show of allShows) {
-    fetch(`https://api.tvmaze.com/shows/${show.id}/episodes`)
-      // console.log( fetch(url));
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        selectEpisodes(data);
-        makePageForEpisodes(data); //undefined
-        console.log(makePageForEpisodes(data));
-      })
-      .catch((err) => console.log(err));
-  }
-
+function setup() {
   showSelect(allShows);
 }
 
-// window.onload = setup;
-getFetchData();
+function fetchEpisodes(showID) {
+  fetch(`https://api.tvmaze.com/shows/${showID}/episodes`)
+    .then((response) => response.json())
+    .then((data) => {
+      selectEpisodes(data);
+      makePageForEpisodes(data);
+    })
+    .catch((err) => console.log(err));
+}
+
+window.onload = setup;
 
 //LEVEL 100- Get Episodes from getAllEpisodes Function
 
@@ -38,13 +33,13 @@ function makePageForEpisodes(episodeList) {
   countEpisodes.innerText = `Display ${episodeList.length} of ${episodeList.length} episodes`;
 
   for (const episode of episodeList) {
-    const columnDiv = oneEpisode(episode);
+    const columnDiv = oneEpisodePage(episode);
     rowDiv.appendChild(columnDiv);
 
     rootElem.appendChild(rowDiv);
 
     //creating one episode for each column-4
-    function oneEpisode(episode) {
+    function oneEpisodePage(episode) {
       const columnDiv = document.createElement("div");
       columnDiv.classList.add("col-md-4");
 
@@ -69,7 +64,7 @@ function makePageForEpisodes(episodeList) {
   }
 } //makePageForEpisodes closing
 
-//Level 200-Search Term
+//Level 200-Search Field
 
 const searchInput = document.querySelector(".searchInput");
 const displayEpisodes = document.querySelector(".displayResults");
@@ -96,59 +91,55 @@ function searchEpisodes() {
   });
 }
 
-//Level 300-Select/Option Menu
+//Level 300-Select Episode Menu
 
 function selectEpisodes(wholeEpisodes) {
   const selectBtn = document.querySelector(".selectEpisodes");
+  selectBtn.innerHTML = `<option value="">Select an Episode</option>`;
 
-  for (let i = 1; i < wholeEpisodes.length; i++) {
+  for (let i = 0; i < wholeEpisodes.length; i++) {
     let episode = wholeEpisodes[i];
 
-    const optionValue = document.createElement("option");
-    // optionValue.innerHTML = "Select Episode";
-
-    optionValue.value = i;
+    const optionElem = document.createElement("option");
+    optionElem.value = i;
 
     if (episode.number > 9) {
-      optionValue.innerText = `${episode.name} - S0${episode.season}E${episode.number}`;
+      optionElem.innerText = `${episode.name} - S0${episode.season}E${episode.number}`;
     } else {
-      optionValue.innerText = `${episode.name} - S0${episode.season}E0${episode.number}`;
+      optionElem.innerText = `${episode.name} - S0${episode.season}E0${episode.number}`;
     }
 
-    selectBtn.appendChild(optionValue);
+    selectBtn.appendChild(optionElem);
   }
 
-  selectBtn.addEventListener("change", getEpisodes);
+  selectBtn.addEventListener("change", getOneEpisode);
 
-  function getEpisodes(e) {
+  function getOneEpisode(e) {
     const index = parseInt(e.target.value);
     index === -1
-      ? makePageForEpisodes(wholeEpisodes)
+      ? makePageForEpisodes([wholeEpisodes])
       : makePageForEpisodes([wholeEpisodes[index]]);
   }
 }
 
-//Level 400-Display Show Menu
+//Level 400-Select Show Menu
 
-function showSelect(getShows) {
+function showSelect(wholeShows) {
   const showBtn = document.querySelector(".selectShow");
+  showBtn.innerHTML = `<option value="">Select a Show</option>`;
 
-  for (let i = 0; i < getShows.length; i++) {
-    const show = getShows[i];
+  for (show of wholeShows) {
     const optionSelect = document.createElement("option");
-    optionSelect.value = i;
-
-    optionSelect.innerText = `${show.name}`;
+    optionSelect.value = show.id;
+    optionSelect.innerText = show.name;
 
     showBtn.appendChild(optionSelect);
   }
 
-  showBtn.addEventListener("change", searchShowValue);
+  showBtn.addEventListener("change", getOneShow);
 
-  function searchShowValue(e) {
+  function getOneShow(e) {
     const index = parseInt(e.target.value);
-    index === -1
-      ? makePageForEpisodes(getShows)
-      : makePageForEpisodes([getShows[index]]);
+    fetchEpisodes(index);
   }
 }
