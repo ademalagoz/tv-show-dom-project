@@ -1,7 +1,14 @@
 const allShows = getAllShows();
 
+function sorting() {
+  return allShows.sort((firstShow, secondShow) =>
+    firstShow.name > secondShow.name ? 1 : -1
+  );
+}
+
 function setup() {
-  showSelect(allShows);
+  showSelect(sorting());
+  homePage(sorting());
 }
 
 function fetchEpisodes(showID) {
@@ -16,7 +23,7 @@ function fetchEpisodes(showID) {
 
 window.onload = setup;
 
-//LEVEL 100- Get Episodes from getAllEpisodes Function
+//LEVEL 100- Get episodes from getAllEpisodes Function
 
 function makePageForEpisodes(episodeList) {
   const rootElem = document.getElementById("root");
@@ -95,7 +102,7 @@ function searchEpisodes() {
 
 function selectEpisodes(wholeEpisodes) {
   const selectBtn = document.querySelector(".selectEpisodes");
-  selectBtn.innerHTML = `<option value="">Select an Episode</option>`;
+  selectBtn.innerHTML = `<option value="">All Episodes</option>`;
 
   for (let i = 0; i < wholeEpisodes.length; i++) {
     let episode = wholeEpisodes[i];
@@ -116,9 +123,7 @@ function selectEpisodes(wholeEpisodes) {
 
   function getOneEpisode(e) {
     const index = parseInt(e.target.value);
-    index === -1
-      ? makePageForEpisodes([wholeEpisodes])
-      : makePageForEpisodes([wholeEpisodes[index]]);
+    if (index) makePageForEpisodes([wholeEpisodes[index]]);
   }
 }
 
@@ -126,13 +131,13 @@ function selectEpisodes(wholeEpisodes) {
 
 function showSelect(wholeShows) {
   const showBtn = document.querySelector(".selectShow");
-  showBtn.innerHTML = `<option value="">Select a Show</option>`;
+  showBtn.innerHTML = `<option value="">All Shows</option>`;
 
   for (show of wholeShows) {
     const optionSelect = document.createElement("option");
+
     optionSelect.value = show.id;
     optionSelect.innerText = show.name;
-
     showBtn.appendChild(optionSelect);
   }
 
@@ -140,6 +145,56 @@ function showSelect(wholeShows) {
 
   function getOneShow(e) {
     const index = parseInt(e.target.value);
-    fetchEpisodes(index);
+    console.log(index);
+    if (index) {
+      fetchEpisodes(index);
+    }
   }
 }
+
+//LEVEL 500- HomePage Function
+
+function homePage(showList) {
+  const rootElem = document.getElementById("root");
+  rootElem.classList.add("container");
+
+  const rowDiv = document.createElement("div");
+  rowDiv.classList.add("row");
+  const rowMain = document.getElementsByClassName("row");
+
+  if (rowMain.length > 0) {
+    rowMain[0].remove();
+  }
+  const countShows = document.querySelector(".displayResults");
+  countShows.innerText = `Display ${showList.length} of ${showList.length} Shows`;
+
+  for (const show of showList) {
+    const columnDiv = oneShowPage(show);
+    rowDiv.appendChild(columnDiv);
+
+    rootElem.appendChild(rowDiv);
+
+    //creating one show for each column-4
+    function oneShowPage(show) {
+      const columnDiv = document.createElement("div");
+      columnDiv.classList.add("col-md-4");
+
+      const title = document.createElement("h4");
+      title.innerText = `${show.name}`;
+
+      const type = document.createElement("h6");
+      type.innerText = `Genres: ${show.genres.join(", ")} \n Runtime: ${
+        show.runtime
+      } \n Rating: ${show.rating.average} `;
+
+      const imgElem = document.createElement("img");
+      imgElem.src = show.image.medium;
+      const summaryText = document.createElement("p");
+      summaryText.innerHTML = show.summary;
+
+      columnDiv.append(title, type, imgElem, summaryText);
+
+      return columnDiv;
+    }
+  }
+} //homepage
