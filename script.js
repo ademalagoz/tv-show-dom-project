@@ -1,14 +1,15 @@
 const allShows = getAllShows();
 
-function sorting() {
+function sortName() {
   return allShows.sort((firstShow, secondShow) =>
     firstShow.name > secondShow.name ? 1 : -1
   );
 }
+const sorting = sortName();
 
 function setup() {
-  showSelect(sorting());
-  homePage(sorting());
+  showSelect(sorting);
+  homePage(sorting);
 }
 
 function fetchEpisodes(showID) {
@@ -24,10 +25,12 @@ function fetchEpisodes(showID) {
 window.onload = setup;
 
 //LEVEL 100- Get episodes from getAllEpisodes Function
+const displayResults = document.createElement("p");
+displayResults.classList.add("results");
 
 function makePageForEpisodes(episodeList) {
-  const rootElem = document.getElementById("root");
-  rootElem.classList.add("container");
+  const rootContainer = document.getElementById("root");
+  rootContainer.classList.add("container");
 
   const rowDiv = document.createElement("div");
   rowDiv.classList.add("row");
@@ -36,45 +39,44 @@ function makePageForEpisodes(episodeList) {
   if (rowMain.length > 0) {
     rowMain[0].remove();
   }
-  const countEpisodes = document.querySelector(".displayResults");
-  countEpisodes.innerText = `Display ${episodeList.length} of ${episodeList.length} episodes`;
+
+  displayResults.innerText = `Display ${episodeList.length} of ${episodeList.length} episodes`;
+  const navigation = document.querySelector(".navigation");
+  navigation.appendChild(displayResults);
 
   for (const episode of episodeList) {
-    const columnDiv = oneEpisodePage(episode);
+    const columnDiv = document.createElement("div");
+    columnDiv.classList.add("col-md-4");
+
+    const title = document.createElement("h4");
+
+    if (episode.number > 9) {
+      title.innerText = `${episode.name} - S0${episode.season}E${episode.number}`;
+    } else {
+      title.innerText = `${episode.name} - S0${episode.season}E0${episode.number}`;
+    }
+
+    const imgElem = document.createElement("img");
+    imgElem.src = episode.image.medium;
+
+    const summaryText = document.createElement("p");
+    summaryText.innerHTML = episode.summary;
+
+    columnDiv.append(title, imgElem, summaryText);
     rowDiv.appendChild(columnDiv);
 
-    rootElem.appendChild(rowDiv);
-
-    //creating one episode for each column-4
-    function oneEpisodePage(episode) {
-      const columnDiv = document.createElement("div");
-      columnDiv.classList.add("col-md-4");
-
-      const title = document.createElement("h4");
-
-      if (episode.number > 9) {
-        title.innerText = `${episode.name} - S0${episode.season}E${episode.number}`;
-      } else {
-        title.innerText = `${episode.name} - S0${episode.season}E0${episode.number}`;
-      }
-
-      const imgElem = document.createElement("img");
-      imgElem.src = episode.image.medium;
-
-      const summaryText = document.createElement("p");
-      summaryText.innerHTML = episode.summary;
-
-      columnDiv.append(title, imgElem, summaryText);
-
-      return columnDiv;
-    }
+    rootContainer.appendChild(rowDiv);
   }
 } //makePageForEpisodes closing
 
 //Level 200-Search Field
 
-const searchInput = document.querySelector(".searchInput");
-const displayEpisodes = document.querySelector(".displayResults");
+const searchInput = document.createElement("input");
+searchInput.setAttribute("type", "Text");
+searchInput.setAttribute("placeholder", "Search Term");
+const navigation = document.querySelector(".navigation");
+navigation.appendChild(searchInput);
+
 searchInput.addEventListener("input", searchEpisodes);
 
 function searchEpisodes() {
@@ -82,7 +84,7 @@ function searchEpisodes() {
   const allColumns = document.querySelectorAll(".col-md-4");
 
   let count = 0;
-  displayEpisodes.innerText = "";
+  displayResults.innerText = "";
 
   allColumns.forEach((column) => {
     const columnValue = column.textContent.toLowerCase();
@@ -90,13 +92,16 @@ function searchEpisodes() {
     if (columnValue.includes(searchValue)) {
       column.style.display = "";
       count++;
-      displayEpisodes.innerText = `Display ${count} of ${allColumns.length} episodes`;
+      displayResults.innerText = `Display ${count} of ${allColumns.length} episodes`;
     } else {
       column.style.display = "none";
-      displayEpisodes.innerText = `Display ${count} of ${allColumns.length} episodes`;
+      displayResults.innerText = `Display ${count} of ${allColumns.length} episodes`;
     }
   });
-}
+
+  const navigation = document.querySelector(".navigation");
+  navigation.appendChild(displayResults);
+} //Search Field Closing
 
 //Level 300-Select Episode Menu
 
@@ -125,9 +130,9 @@ function selectEpisodes(wholeEpisodes) {
     const index = parseInt(e.target.value);
     if (index) makePageForEpisodes([wholeEpisodes[index]]);
   }
-}
+} //Select Episode Closing
 
-//Level 400-Select Show Menu
+//Level 400-Show Select Menu
 
 function showSelect(wholeShows) {
   const showBtn = document.querySelector(".selectShow");
@@ -145,18 +150,17 @@ function showSelect(wholeShows) {
 
   function getOneShow(e) {
     const index = parseInt(e.target.value);
-    console.log(index);
     if (index) {
       fetchEpisodes(index);
     }
   }
-}
+} //Show Select Closing
 
 //LEVEL 500- HomePage Function
 
 function homePage(showList) {
-  const rootElem = document.getElementById("root");
-  rootElem.classList.add("container");
+  const rootContainer = document.getElementById("root");
+  rootContainer.classList.add("container");
 
   const rowDiv = document.createElement("div");
   rowDiv.classList.add("row");
@@ -165,36 +169,39 @@ function homePage(showList) {
   if (rowMain.length > 0) {
     rowMain[0].remove();
   }
-  const countShows = document.querySelector(".displayResults");
-  countShows.innerText = `Display ${showList.length} of ${showList.length} Shows`;
+
+  displayResults.innerText = `Display ${showList.length} of ${showList.length} Shows`;
+  const navigation = document.querySelector(".navigation");
+  navigation.appendChild(displayResults);
 
   for (const show of showList) {
-    const columnDiv = oneShowPage(show);
+    const columnDiv = document.createElement("div");
+    columnDiv.classList.add("col-md-4");
     rowDiv.appendChild(columnDiv);
 
-    rootElem.appendChild(rowDiv);
+    rootContainer.appendChild(rowDiv);
+    const title = document.createElement("h4");
+    title.innerText = `${show.name}`;
 
-    //creating one show for each column-4
-    function oneShowPage(show) {
-      const columnDiv = document.createElement("div");
-      columnDiv.classList.add("col-md-4");
+    const type = document.createElement("h6");
+    type.innerText = `Genres: ${show.genres.join(", ")} \n Runtime: ${
+      show.runtime
+    } \n Rating: ${show.rating.average} `;
 
-      const title = document.createElement("h4");
-      title.innerText = `${show.name}`;
+    const imgElem = document.createElement("img");
+    imgElem.src = show.image.medium;
+    const summaryText = document.createElement("p");
+    summaryText.innerHTML = show.summary;
 
-      const type = document.createElement("h6");
-      type.innerText = `Genres: ${show.genres.join(", ")} \n Runtime: ${
-        show.runtime
-      } \n Rating: ${show.rating.average} `;
-
-      const imgElem = document.createElement("img");
-      imgElem.src = show.image.medium;
-      const summaryText = document.createElement("p");
-      summaryText.innerHTML = show.summary;
-
-      columnDiv.append(title, type, imgElem, summaryText);
-
-      return columnDiv;
-    }
+    columnDiv.append(title, type, imgElem, summaryText);
   }
-} //homepage
+} //homepage closing
+
+// Back to homepage
+
+const backBtn = document.querySelector(".btn");
+backBtn.addEventListener("click", backHome);
+
+function backHome() {
+  document.location.reload();
+}
