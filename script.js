@@ -1,5 +1,7 @@
 const allShows = getAllShows();
 
+//Main Functions
+
 function sortName() {
   return allShows.sort((firstShow, secondShow) =>
     firstShow.name > secondShow.name ? 1 : -1
@@ -24,10 +26,10 @@ function fetchEpisodes(showID) {
 
 window.onload = setup;
 
-//LEVEL 100- Get episodes from getAllEpisodes Function
 const displayResults = document.createElement("p");
 displayResults.classList.add("results");
 
+//LEVEL 100- Make Page for Episode(s)
 function makePageForEpisodes(episodeList) {
   const rootContainer = document.getElementById("root");
   rootContainer.classList.add("container");
@@ -72,6 +74,7 @@ function makePageForEpisodes(episodeList) {
 //Level 200-Search Field
 
 const searchInput = document.createElement("input");
+searchInput.classList.add("search");
 searchInput.setAttribute("type", "Text");
 searchInput.setAttribute("placeholder", "Search Term");
 const navigation = document.querySelector(".navigation");
@@ -128,7 +131,7 @@ function selectEpisodes(wholeEpisodes) {
 
   function getOneEpisode(e) {
     const index = parseInt(e.target.value);
-    if (index) makePageForEpisodes([wholeEpisodes[index]]);
+    makePageForEpisodes([wholeEpisodes[index]]);
   }
 } //Select Episode Closing
 
@@ -149,14 +152,11 @@ function showSelect(wholeShows) {
   showBtn.addEventListener("change", getOneShow);
 
   function getOneShow(e) {
-    const index = parseInt(e.target.value);
-    if (index) {
-      fetchEpisodes(index);
-    }
+    fetchEpisodes(e.target.value);
   }
 } //Show Select Closing
 
-//LEVEL 500- HomePage Function
+//LEVEL 500- Opening Page
 
 function homePage(showList) {
   const rootContainer = document.getElementById("root");
